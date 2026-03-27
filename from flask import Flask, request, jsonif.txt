@@ -1,0 +1,12 @@
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route("/hello")
+def hello():
+    return "Hello World"
+@app.route("/sum", methods=["POST"])
+def sum_numbers():
+    data = request.json
+    result = data["a"] + data["b"]
+    return jsonify({"result": result})
+
+app.run(debug=True)
