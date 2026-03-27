@@ -1,14 +1,12 @@
 // src/api/client.ts
 import axios from 'axios';
 
-// Get the API URL based on environment
 const getBaseUrl = () => {
   if (import.meta.env.DEV) {
-    // Development - use localhost
     return 'http://localhost:5001/api';
   }
   // Production URL
-  return 'https://api.qine.com/api';
+  return 'https://qine-backend.onrender.com/api';
 };
 
 const API_URL = getBaseUrl();

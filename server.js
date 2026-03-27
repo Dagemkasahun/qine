@@ -11,7 +11,7 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 const app = express();
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 app.use(cors({
   origin: [
@@ -1056,9 +1056,9 @@ app.use((err, req, res, next) => {
 // START SERVER
 // ============================================
 
-server.listen(PORT, () => {
-  console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-  console.log(`🔌 WebSocket server running on ws://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+  console.log(`🔌 WebSocket server running on ws://0.0.0.0:${PORT}`);
   console.log('\n📚 API Endpoints Available:');
   console.log('   POST   /api/auth/register');
   console.log('   POST   /api/auth/login');
