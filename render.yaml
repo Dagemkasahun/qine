@@ -1,20 +1,15 @@
+# render.yaml
 services:
   - type: web
     name: qine-backend
     runtime: node
     plan: free
-    rootDir: qine-admin-dashboard
     buildCommand: npm install
     startCommand: node server.js
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: qine-db
-          property: connectionString
+        value: postgresql://postgres.efjlqddpxdclpoidqxmv:Qine-db%40123@aws-1-eu-central-2.pooler.supabase.com:6543/qine-db
       - key: NODE_ENV
         value: production
-
-  - type: postgresql
-    name: qine-db
-    plan: free
-    ipAllowList: []
+      - key: PORT
+        value: 10000
