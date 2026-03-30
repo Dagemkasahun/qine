@@ -4,9 +4,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"   // Hardcoded path - no .env needed
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
+
 
 // ============================================
 // USER MANAGEMENT - WITH ALL RELATIONS

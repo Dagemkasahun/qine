@@ -8,7 +8,7 @@ services:
     startCommand: node server.js
     envVars:
       - key: DATABASE_URL
-        value: postgresql://postgres.efjlqddpxdclpoidqxmv:Qine-db%40123@aws-1-eu-central-2.pooler.supabase.com:6543/qine-db
+        value: postgresql://postgres:Qine-db%40123@db.tplcrjfpllbytqfmhrlf.supabase.co:5432/postgres
       - key: NODE_ENV
         value: production
       - key: PORT

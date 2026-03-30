@@ -1,50 +1,50 @@
 // src/api/client.ts
-import axios from 'axios';
+import axios from 'axios'
 
-// Get the API URL based on environment
+// Dynamically pick API base URL
 const getBaseUrl = () => {
   if (import.meta.env.DEV) {
-    // Development - use localhost
-    return 'http://localhost:5001/api';
+    // Local development backend
+    return 'http://localhost:5001/api'
   }
-  // Production URL
-  return 'https://api.qine.com/api';
-};
+  // Production backend (Render)
+  return import.meta.env.VITE_API_URL || 'https://qine-backend.onrender.com/api'
+}
 
-const API_URL = getBaseUrl();
+const API_URL = getBaseUrl()
+console.log('🔵 API URL:', API_URL)
 
-console.log('🔵 API URL:', API_URL);
-
+// Create Axios instance
 export const apiClient = axios.create({
   baseURL: API_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
-});
+})
 
-// Request interceptor to add token
+// Request interceptor: attach token if available
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken')
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`
     }
-    return config;
+    return config
   },
   (error) => Promise.reject(error)
-);
+)
 
-// Response interceptor for error handling
+// Response interceptor: handle 401 errors
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('userToken');
-      localStorage.removeItem('user');
-      // You can add navigation to login here
-      window.location.href = '/login';
+      localStorage.removeItem('userToken')
+      localStorage.removeItem('user')
+      // Redirect to login page
+      window.location.href = '/login'
     }
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)

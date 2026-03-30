@@ -618,55 +618,75 @@ async function main() {
   console.log('✅ Created notifications');
 
   // ============================================
-  // CREATE SYSTEM SETTINGS
+  // CREATE SYSTEM SETTINGS (FIXED: Using upsert to avoid duplicates)
   // ============================================
 
-  await prisma.systemSetting.createMany({
-    data: [
-      {
-        key: 'platform_name',
-        value: '"QINE Super App"',
-        type: 'STRING',
-        description: 'Platform name displayed across the app',
-        category: 'GENERAL',
-        isPublic: true
-      },
-      {
-        key: 'default_commission',
-        value: '10',
-        type: 'NUMBER',
-        description: 'Default commission rate for merchants',
-        category: 'COMMISSION',
-        isEditable: true
-      },
-      {
-        key: 'delivery_base_fee',
-        value: '30',
-        type: 'NUMBER',
-        description: 'Base delivery fee',
-        category: 'DELIVERY',
-        isEditable: true
-      },
-      {
-        key: 'free_delivery_threshold',
-        value: '500',
-        type: 'NUMBER',
-        description: 'Minimum order for free delivery',
-        category: 'DELIVERY',
-        isEditable: true
-      },
-      {
-        key: 'maintenance_mode',
-        value: 'false',
-        type: 'BOOLEAN',
-        description: 'Enable maintenance mode',
-        category: 'SYSTEM',
-        isPublic: true
-      }
-    ]
-  });
+  const systemSettings = [
+    {
+      key: 'platform_name',
+      value: '"QINE Super App"',
+      type: 'STRING',
+      description: 'Platform name displayed across the app',
+      category: 'GENERAL',
+      isPublic: true
+    },
+    {
+      key: 'default_commission',
+      value: '10',
+      type: 'NUMBER',
+      description: 'Default commission rate for merchants',
+      category: 'COMMISSION',
+      isEditable: true
+    },
+    {
+      key: 'delivery_base_fee',
+      value: '30',
+      type: 'NUMBER',
+      description: 'Base delivery fee',
+      category: 'DELIVERY',
+      isEditable: true
+    },
+    {
+      key: 'free_delivery_threshold',
+      value: '500',
+      type: 'NUMBER',
+      description: 'Minimum order for free delivery',
+      category: 'DELIVERY',
+      isEditable: true
+    },
+    {
+      key: 'maintenance_mode',
+      value: 'false',
+      type: 'BOOLEAN',
+      description: 'Enable maintenance mode',
+      category: 'SYSTEM',
+      isPublic: true
+    },
+    {
+      key: 'max_riders_per_order',
+      value: '1',
+      type: 'NUMBER',
+      description: 'Maximum number of riders per order',
+      category: 'DELIVERY'
+    },
+    {
+      key: 'order_timeout_minutes',
+      value: '30',
+      type: 'NUMBER',
+      description: 'Order cancellation timeout',
+      category: 'ORDERS'
+    }
+  ];
 
-  console.log('✅ Created system settings');
+  // Upsert each setting to avoid duplicate key errors
+  for (const setting of systemSettings) {
+    await prisma.systemSetting.upsert({
+      where: { key: setting.key },
+      update: setting,
+      create: setting
+    });
+  }
+  console.log('✅ Created/Updated system settings');
 
   // ============================================
   // FINAL COUNTS
